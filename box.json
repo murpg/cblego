@@ -1,0 +1,25 @@
+{
+    "name":"Lego",
+    "version":"1.0.0",
+    "slug":"commandbox-cblego",
+    "author":"George Murphy",
+    "shortDescription":"cblego",
+    "type":"commandbox-modules",
+    "keywords":"commandbox-cblego,lego",
+    "homepage":"https://github.com/murpg/cblego",
+    "documentation":"https://github.com/murpg/cblego",
+    "repository":{
+        "type":"github",
+        "URL":"https://github.com/murpg/cblego.git"
+    },
+    "license":[
+        {
+            "type":"Apache2",
+            "url":"http://www.apache.org/licenses/LICENSE-2.0"
+        }
+    ],
+    "scripts":{},
+    "dependencies":{
+        "commandbox-dotenv":"*"
+    }
+}
