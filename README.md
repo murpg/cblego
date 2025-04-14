@@ -36,7 +36,7 @@ scoop install lego
 ```
 
 2. Using PowerShell Script (Recommended):
-   - Download and run the `Install-Lego.ps1` script which:
+   - Download and run the  [Install-Lego.ps1](https://github.com/murpg/Docs/blob/main/installLegoWindows.md#installation-script) script which:
      - Finds your CommandBox installation
      - Downloads the latest Lego binary
      - Places it alongside your Box executable
