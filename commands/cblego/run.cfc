@@ -1,5 +1,8 @@
 component {
 
+    property name="certificateManager" inject="CertificateManager@commandbox-cblego";
+    property name="fileSystemUtil"     inject="FileSystem";
+
     /**
      * Runs the LEGO command with specified parameters.
      *
@@ -28,12 +31,50 @@ component {
         legoCmd &= " run";
         
         print.redLine("Executing command: " & legoCmd);
-        
         try {
             command(legoCmd).run();
+
             variables.print.greenLine("Certificate generation request completed");
+
+            saveCertificateMetadata( arguments.envfile, arguments.path );
+
         } catch (any e) {
             return error("Error executing command: " & e.message);
+        }
+    } 
+
+    private function saveCertificateMetadata(string envfile, string path = "") {
+
+        var directory = variables.fileSystemUtil.resolvePath( arguments.path );
+
+        var metadataFile = directory & "certificates.json";
+
+        var metadata = fileExists(metadataFile) ? deserializeJSON(fileRead(metadataFile)) : {"certificates": []};
+
+        var domain  = listFirst(systemSettings.getSystemSetting( 'DOMAINS' ));
+
+        var certPath = directory & ".lego\certificates\#domain#.crt";
+
+        if( fileExists(certPath) ){
+
+            var certInfo = variables.certificateManager.getCertificateInfo(certPath);
+            
+            metadata.certificates.append({
+                "domains": certInfo.domains,
+                "issueDate": certInfo.issueDate,
+                "expiryDate": certInfo.expiryDate,
+                "dnsProvider": systemSettings.getSystemSetting( 'DNS_PROVIDER' ),
+                "envFile": envfile,
+                "path": certPath,
+                "lastRenewal": now(),
+                "renewalCount": 0
+            });
+            
+            fileWrite(metadataFile, serializeJSON(metadata));
+
+            variables.print.greenLine("Certificate generation info stored certificates.json");
+        }else{
+             return error("Error certPath file does not exist: " & certPath);
         }
     }
 }
